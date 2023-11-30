@@ -1,0 +1,64 @@
+﻿@page "/customers/create"
+@inject QuickGrid_Scaffolded_CRUDContext DB
+@using QuickGrid_Scaffolded_CRUD.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Customer" OnValidSubmit="AddCustomer" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="firstname" class="form-label">FirstName:</label> 
+                <InputText id="firstname" @bind-Value="Customer.FirstName" class="form-control" /> 
+                <ValidationMessage For="() => Customer.FirstName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="lastname" class="form-label">LastName:</label> 
+                <InputText id="lastname" @bind-Value="Customer.LastName" class="form-control" /> 
+                <ValidationMessage For="() => Customer.LastName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="birthdate" class="form-label">Birthdate:</label> 
+                <InputDate id="birthdate" @bind-Value="Customer.Birthdate" class="form-control" /> 
+                <ValidationMessage For="() => Customer.Birthdate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone:</label> 
+                <InputText id="phone" @bind-Value="Customer.Phone" class="form-control" /> 
+                <ValidationMessage For="() => Customer.Phone" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label> 
+                <InputText id="email" @bind-Value="Customer.Email" class="form-control" /> 
+                <ValidationMessage For="() => Customer.Email" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/customers">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Customer Customer { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddCustomer()
+    {
+        Customer.ID = Guid.NewGuid().ToString();
+        DB.Customer.Add(Customer);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/customers");
+    }
+}

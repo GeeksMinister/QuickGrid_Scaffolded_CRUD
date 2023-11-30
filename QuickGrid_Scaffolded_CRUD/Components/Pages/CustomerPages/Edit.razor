@@ -1,0 +1,106 @@
+﻿@page "/Customers/edit"
+@inject QuickGrid_Scaffolded_CRUDContext DB
+@using QuickGrid_Scaffolded_CRUD.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Customer</h4>
+<hr />
+@if (Customer is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Customer" OnValidSubmit="UpdateCustomer" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Customer.ID" value="@Customer.ID" />
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">FirstName:</label>
+                    <InputText id="firstname" @bind-Value="Customer.FirstName" class="form-control" />
+                    <ValidationMessage For="() => Customer.FirstName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="lastname" class="form-label">LastName:</label>
+                    <InputText id="lastname" @bind-Value="Customer.LastName" class="form-control" />
+                    <ValidationMessage For="() => Customer.LastName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="birthdate" class="form-label">Birthdate:</label>
+                    <InputDate id="birthdate" @bind-Value="Customer.Birthdate" class="form-control" />
+                    <ValidationMessage For="() => Customer.Birthdate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone:</label>
+                    <InputText id="phone" @bind-Value="Customer.Phone" class="form-control" />
+                    <ValidationMessage For="() => Customer.Phone" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <InputText id="email" @bind-Value="Customer.Email" class="form-control" />
+                    <ValidationMessage For="() => Customer.Email" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/customers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string ID { get; set; }
+
+    [SupplyParameterFromForm]
+    public Customer? Customer { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Customer ??= await DB.Customer.FirstOrDefaultAsync(m => m.ID == ID);
+
+        if (Customer is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateCustomer()
+    {
+        DB.Attach(Customer!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CustomerExists(Customer!.ID))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/customers");
+    }
+
+    bool CustomerExists(string id)
+    {
+        return DB.Customer.Any(e => e.ID == id);
+    }
+}

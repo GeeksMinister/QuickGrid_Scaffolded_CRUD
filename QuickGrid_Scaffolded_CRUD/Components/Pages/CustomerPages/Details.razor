@@ -1,0 +1,53 @@
+﻿@page "/customers/details"
+@inject QuickGrid_Scaffolded_CRUDContext DB
+@using QuickGrid_Scaffolded_CRUD.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Customer</h4>
+    <hr />
+    @if (customer is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">FirstName</dt>
+            <dd class="col-sm-10">@customer.FirstName</dd>
+            <dt class="col-sm-2">LastName</dt>
+            <dd class="col-sm-10">@customer.LastName</dd>
+            <dt class="col-sm-2">Birthdate</dt>
+            <dd class="col-sm-10">@customer.Birthdate</dd>
+            <dt class="col-sm-2">Phone</dt>
+            <dd class="col-sm-10">@customer.Phone</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@customer.Email</dd>
+        </dl>
+        <div>
+            <a href="@($"/customers/edit?id={customer.ID}")">Edit</a> |
+            <a href="@($"/customers")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Customer? customer;
+
+    [SupplyParameterFromQuery]
+    public string ID { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await DB.Customer.FirstOrDefaultAsync(m => m.ID == ID);
+
+        if (customer is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
