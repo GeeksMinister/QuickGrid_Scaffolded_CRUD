@@ -3,12 +3,9 @@ using System.ComponentModel;
 
 namespace QuickGrid_Scaffolded_CRUD.Models;
 
-public class Customer
+public class Customer : DbObj
 {
-    [Key]
-    [StringLength(36)]
-    public string ID { get; set; } = Guid.NewGuid().ToString();
-
+    
     [Required]
     [DisplayName("First Name")]
     [StringLength(50, MinimumLength = 3, ErrorMessage = "First Name should be between 3 - 50 characters")]

@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using QuickGrid_Scaffolded_CRUD.Data;
+using QuickGrid_Scaffolded_CRUD;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<QuickGrid_Scaffolded_CRUDContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? throw new InvalidOperationException("Connection string 'QuickGrid_Scaffolded_CRUDContext' not found.")));
+
+builder.Services.AddSingleton<BlazorScaffoldingAppsDbContext>();
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();;
 

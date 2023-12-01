@@ -1,5 +1,5 @@
 ﻿@page "/Customers/edit"
-@inject QuickGrid_Scaffolded_CRUDContext DB
+@inject QuickGrid_Scaffolded_CRUD.Data.BlazorScaffoldingAppsDbContext DB
 @using QuickGrid_Scaffolded_CRUD.Models
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
@@ -78,7 +78,7 @@ else
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateCustomer()
     {
-        DB.Attach(Customer!).State = EntityState.Modified;
+        DB.Attach(Customer!).State = global::Microsoft.EntityFrameworkCore.EntityState.Modified;
 
         try
         {
